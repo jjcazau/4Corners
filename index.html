@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Classroom Game</title>
+    <title>4Corners Classroom Game</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -22,8 +22,35 @@
         <div class="crosses"></div>
     </div>
     <footer>
-        © Copyright 2023 <a href="https://reddirtsolutions.com.au">Red Dirt Solutions</a>
+        <div>© Copyright 2023 <a href="https://reddirtsolutions.com.au">Red Dirt Solutions</a></div>
+        <div class="footer-content">
+            <label for="numCrosses">Number of Crosses:</label>
+            <input type="number" id="numCrosses" value="10" min="1" max="20" step="1">
+            <button id="changeCrosses">Change</button>
+        </div>
+        <div class="footer-content">
+            <button id="helpBtn">Help</button>
+            <button id="resetBtn">Reset</button>
+        </div>
     </footer>
+
+    
+<!-- Pop-up for the game rules -->
+<div id="rulesModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 style="text-align: center;">Game Rules</h2>
+        <p>Welcome to the 4-Corners Classroom Game! Here's how to play:</p>
+        <ol>
+            <li>Students, divide into four teams, each team taking a corner of the room.</li>
+            <li>We'll pose a question to the first team. Get it right, and you can choose to remove two 'X's from the board of any one team or spread the joy by removing one 'X' from two different teams.</li>
+            <li>Feeling lucky? You also get a chance to toss a ball into a container at the center of the room. If you make the shot, you're rewarded with an extra 'X' to erase.</li>
+            <li>It's the next team's turn for a new question. However, if a team misses their question, the query carries over to the next group. This continues until a team provides the correct answer.</li>
+            <li>Play passes sequentially between teams, bringing new questions and chances to knock out those 'X's!</li>
+        </ol>
+        <p>Keep your wits sharp and aim true - let the games begin!</p>
+    </div>
+</div>
 
     <script src="script.js"></script>
 </body>
