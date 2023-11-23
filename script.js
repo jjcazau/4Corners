@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     initializeGame(document.getElementById('numCrosses').value);
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+    }, false);
     // Help modal setup
     var modal = document.getElementById("rulesModal");
     var btn = document.getElementById("helpBtn");
@@ -55,12 +58,12 @@ function initializeGame(crossCount) {
         // Reset X font style
         team.style.color = 'black';
         team.style.fontSize = '1em';
-        
+
         team.innerHTML = ''; // Clear existing crosses
         for (var i = 0; i < crossCount; i++) {
             var cross = document.createElement('div');
             cross.classList.add('cross');
-            cross.textContent = 'X';
+            cross.textContent = '❌';
             cross.onclick = function() {
                 this.remove();
                 // Check if the team is out

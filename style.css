@@ -7,12 +7,19 @@ body {
     overflow: hidden;
 }
 
+* {
+    box-sizing: border-box; /* Ensures that padding and border are included in total width and height */
+}
+
 .corner {
-    box-sizing: border-box;
-    width: 50%;
-    height: calc(50% - 2px); /* Adjust the height for border overlap */
+    flex: 1 0 50%; /* Flex basis set to 50% */
+    height: 50%; /* Each corner takes up exactly half the height of the viewport */
     text-align: center;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #000; /* Use 1px border for a more predictable layout */
 }
 
 /* Apply border to all corners and then remove it as needed */
@@ -30,6 +37,8 @@ body {
     border-bottom: none;
 }
 
+
+
 h2 {
     margin-top: 0;
     background-color: #4CAF50;
@@ -39,6 +48,15 @@ h2 {
     width: 100%;
     top: 0;
     left: 0;
+}
+
+body, 
+button, 
+.crosses * { /* Add other selectors as needed */
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+    user-select: none; /* Standard syntax */
 }
 
 .crosses {
@@ -58,7 +76,7 @@ h2 {
 }
 
 .cross:hover {
-    transform: scale(1.2);
+    transform: scale(1.5);
 }
 
 /* Footer */
