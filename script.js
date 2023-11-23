@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
     }, false);
+
     // Help modal setup
     var modal = document.getElementById("rulesModal");
     var btn = document.getElementById("helpBtn");
@@ -17,8 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
         changeNumberOfCrosses(-1);
     });
 
-    // Event listener for applying the number of crosses directly after change
-    // This can be omitted if you wish to use an 'apply' button instead
     function changeNumberOfCrosses(change) {
         var numCrossesInput = document.getElementById('numCrosses');
         var currentVal = parseInt(numCrossesInput.value);
@@ -55,10 +54,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeGame(crossCount) {
     var teams = document.querySelectorAll('.crosses');
     teams.forEach(function(team) {
-        // Reset X font style
+        // Reset the font size and color
         team.style.color = 'black';
         team.style.fontSize = '1em';
-
         team.innerHTML = ''; // Clear existing crosses
         for (var i = 0; i < crossCount; i++) {
             var cross = document.createElement('div');
@@ -66,20 +64,29 @@ function initializeGame(crossCount) {
             cross.textContent = '❌';
             cross.onclick = function() {
                 this.remove();
-                // Check if the team is out
-                if (team.getElementsByClassName('cross').length === 0) {
-                    team.textContent = 'Out!';
-                    team.style.color = 'red';
-                    team.style.fontSize = '3em';
-                }
+                checkTeamStatus(team);
             };
             team.appendChild(cross);
         }
-        // Initial check if the team is out
-        if (team.getElementsByClassName('cross').length === 0) {
-            team.textContent = 'Out!';
-            team.style.color = 'red';
-            team.style.fontSize = '3em';
-        }
+        checkTeamStatus(team); // Initial check if the team is out
+    });
+}
+
+function checkTeamStatus(team) {
+    if (team.getElementsByClassName('cross').length === 0) {
+        team.textContent = 'Out!';
+        team.style.color = 'red';
+        team.style.fontSize = '3em';
+        triggerConfetti(team.parentNode);
+    }
+}
+
+function triggerConfetti(element) {
+    var rect = element.getBoundingClientRect();
+    confetti({
+        particleCount: 350,
+        spread: 100,
+        origin: { y: rect.top / window.innerHeight, x: (rect.left + rect.width / 2) / window.innerWidth },
+        colors: ['#FF0000'] // Red confetti
     });
 }
