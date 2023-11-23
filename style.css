@@ -98,6 +98,13 @@ footer .footer-content {
     flex-grow: 1;
 }
 
+footer #numCrosses {
+    text-align: center;
+    width: 50px; /* Set a fixed width */
+    border: 1px solid #ccc; /* Example border */
+    margin: 0 5px; /* Spacing between buttons and input field */
+}
+
 
 
 /* Button Styling in Footer */
