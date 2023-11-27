@@ -1,92 +1,148 @@
 document.addEventListener('DOMContentLoaded', function() {
-    initializeGame(document.getElementById('numCrosses').value);
+    initializeGame(getNumCrosses());
+    preventDefaultContextMenu();
+    setupModalInteractions();
+    setupCrossCountChangeButtons();
+    setupResetButton();
+});
+
+function getNumCrosses() {
+    return parseInt(document.getElementById('numCrosses').value);
+}
+
+function preventDefaultContextMenu() {
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
     }, false);
+}
 
-    // Help modal setup
-    var modal = document.getElementById("rulesModal");
-    var btn = document.getElementById("helpBtn");
-    var span = document.getElementsByClassName("close")[0];
+function setupModalInteractions() {
+    const modal = document.getElementById("rulesModal");
+    const btn = document.getElementById("helpBtn");
+    const span = document.getElementsByClassName("close")[0];
 
-    // Increase and decrease button event listeners
-    document.getElementById('increaseCrosses').addEventListener('click', function() {
-        changeNumberOfCrosses(1);
-    });
+    btn.addEventListener('click', () => modal.style.display = "block");
+    span.addEventListener('click', () => modal.style.display = "none");
 
-    document.getElementById('decreaseCrosses').addEventListener('click', function() {
-        changeNumberOfCrosses(-1);
-    });
-
-    function changeNumberOfCrosses(change) {
-        var numCrossesInput = document.getElementById('numCrosses');
-        var currentVal = parseInt(numCrossesInput.value);
-        var newVal = currentVal + change;
-
-        // Check the range of the new value
-        if(newVal >= 1 && newVal <= 20) {
-            numCrossesInput.value = newVal;
-            initializeGame(newVal); // Re-initialize the game with the new value
-        }
-    }
-
-    // Help modal interactions
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
             modal.style.display = "none";
         }
-    }
-
-    // Reset button functionality
-    document.getElementById("resetBtn").addEventListener('click', function() {
-        initializeGame(document.getElementById('numCrosses').value);
     });
-});
+}
+
+function setupCrossCountChangeButtons() {
+    document.getElementById('increaseCrosses').addEventListener('click', () => changeNumberOfCrosses(1));
+    document.getElementById('decreaseCrosses').addEventListener('click', () => changeNumberOfCrosses(-1));
+}
+
+function changeNumberOfCrosses(change) {
+    const numCrossesInput = document.getElementById('numCrosses');
+    const currentVal = getNumCrosses();
+    const newVal = currentVal + change;
+
+    if (newVal >= 1 && newVal <= 20) {
+        numCrossesInput.value = newVal;
+        initializeGame(newVal);
+    }
+}
+
+function setupResetButton() {
+    document.getElementById("resetBtn").addEventListener('click', () => initializeGame(getNumCrosses()));
+}
 
 function initializeGame(crossCount) {
-    var teams = document.querySelectorAll('.crosses');
-    teams.forEach(function(team) {
-        // Reset the font size and color
-        team.style.color = 'black';
-        team.style.fontSize = '1em';
-        team.innerHTML = ''; // Clear existing crosses
-        for (var i = 0; i < crossCount; i++) {
-            var cross = document.createElement('div');
-            cross.classList.add('cross');
-            cross.textContent = '❌';
-            cross.onclick = function() {
-                this.remove();
-                checkTeamStatus(team);
-            };
-            team.appendChild(cross);
-        }
-        checkTeamStatus(team); // Initial check if the team is out
+    const teams = document.querySelectorAll('.crosses');
+    teams.forEach(team => setupTeam(team, crossCount));
+}
+
+function setupTeam(team, crossCount) {
+    resetTeamStyle(team);
+    clearTeam(team);
+    addCrossesToTeam(team, crossCount);
+    addPlusButtonToTeam(team);
+    checkTeamStatus(team);
+}
+
+function resetTeamStyle(team) {
+    team.style.color = 'black';
+    team.style.fontSize = '1em';
+}
+
+function clearTeam(team) {
+    team.innerHTML = '';
+}
+
+function addCrossesToTeam(team, count) {
+    for (let i = 0; i < count; i++) {
+        team.appendChild(createCross(team));
+    }
+}
+
+function createCross(team) {
+    const cross = document.createElement('div');
+    cross.classList.add('cross');
+    cross.textContent = '❌';
+    cross.addEventListener('click', () => {
+        cross.remove();
+        checkTeamStatus(team);
     });
+    return cross;
+}
+
+function addPlusButtonToTeam(team) {
+    const plus = createPlusButton(team);
+    team.appendChild(plus);
+}
+
+function createPlusButton(team) {
+    const plus = document.createElement('div');
+    plus.classList.add('plus');
+    plus.textContent = '➕';
+    plus.addEventListener('click', () => {
+        resetTeamStyle(team);
+        team.insertBefore(createCross(team), plus);
+        removeOutDiv(team);
+
+    });
+    return plus;
+}
+
+function resetTextFontStyle(element) {
+    element.style.color = 'black';
+    element.style.fontSize = '1em';
 }
 
 function checkTeamStatus(team) {
     if (team.getElementsByClassName('cross').length === 0) {
-        team.textContent = 'Out!';
-        team.style.color = 'red';
-        team.style.fontSize = '3em';
-        triggerConfetti(team.parentNode);
+        declareTeamOut(team);
+    }
+}
+
+function declareTeamOut(team) {
+    var out = document.createElement('div');
+    out.id = 'out';
+    out.textContent = 'Out!';
+    out.style.color = 'red';
+    out.style.fontSize = '3em';
+    team.insertBefore(out, team.firstChild);
+    triggerConfetti(team.parentNode);
+}
+
+function removeOutDiv(team) {
+    // Remove any divs with id "out" if present
+    const outDiv = team.querySelector('#out');
+    if (outDiv) {
+        outDiv.remove();
     }
 }
 
 function triggerConfetti(element) {
-    var rect = element.getBoundingClientRect();
+    const rect = element.getBoundingClientRect();
     confetti({
         particleCount: 350,
         spread: 100,
         origin: { y: rect.top / window.innerHeight, x: (rect.left + rect.width / 2) / window.innerWidth },
-        colors: ['#FF0000'] // Red confetti
+        colors: ['#FF0000']
     });
 }

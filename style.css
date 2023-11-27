@@ -50,6 +50,8 @@ h2 {
     left: 0;
 }
 
+
+
 body, 
 button, 
 .crosses * { /* Add other selectors as needed */
@@ -76,6 +78,17 @@ button,
 }
 
 .cross:hover {
+    transform: scale(1.5);
+}
+
+.plus {
+    font-size: 2em;
+    cursor: pointer;
+    margin: 10px;
+    transition: transform 0.2s ease;
+}
+
+.plus:hover {
     transform: scale(1.5);
 }
 
@@ -140,6 +153,22 @@ footer button {
 
 footer button:hover {
     background-color: #367c39;
+}
+
+ button {
+    background-color: #e3e3e3;
+    color: rgb(96, 96, 96);
+    border: none;
+    margin: 0 10px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+ button:hover {
+    background-color: #bbbbbb;
 }
 
 /* Modal */
